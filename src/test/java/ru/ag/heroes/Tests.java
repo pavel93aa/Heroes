@@ -77,7 +77,10 @@ public class Tests {
     @Test(description = "Получение информации о существах")
     public void getCreaturesInfoTest() {
         List<String> listOfFractions = new ArrayList<>();
+        List<List<String>> listOfCreaturesParameters = new ArrayList<>();
         Collections.addAll(listOfFractions, "Academy", "Dungeon", "Haven", "Inferno", "Necropolis", "Sylvan", "Fortress", "Stronghold");
+        Collections.addAll(listOfCreaturesParameters, listOfCreatures, listOfAttack, listOfDefense, listOfDamage, listOfHitPoints, listOfSpeed,
+                listOfInitiative, listOfShots, listOfMana, listOfGrowthRate, listOfGold, listOfResource, listOfExperience);
 
         //Переход по ссылке "Heroes V"
         driver.findElement(By.xpath("//a[text()='Heroes V']")).click();
@@ -86,57 +89,51 @@ public class Tests {
         driver.findElement(By.xpath("//a[@href='creatures/index.html']")).click();
 
         for (int i = 0; i < 8; i++) {
-            //Вызываем метод получения информации о существах для каждой фракции
-            getCreaturesInfo(driver.findElement(By.xpath("//a[text()='" + listOfFractions.get(i) + "']")));
+            //Вызываем метод получения информации о существах для каждой из 8 фракций
+            getCreaturesInfo(driver.findElement(By.xpath("//a[text()='" + listOfFractions.get(i) + "']")), listOfFractions.get(i));
+
             //Сохранение информации о существах в файл
-            try {
-                FileOutputStream fileOutputStream = new FileOutputStream(listOfFractions.get(i) + "Creatures.txt");
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-                outputStreamWriter.write(listOfCreatures.toString());
-                outputStreamWriter.close();
-                listOfCreatures.clear();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(listOfFractions.get(i) + "Creatures.txt");
+                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream)) {
+
+                //Проходим циклом for по всем параметрам всех существ
+                //В конце каждого цикла запятая не пишется в поток символов
+                for (List<String> parameters : listOfCreaturesParameters) {
+                    for (int j = 0; j < parameters.size(); j++) {
+                        if (j == parameters.size() - 1) outputStreamWriter.write(parameters.get(j));
+                        else outputStreamWriter.write(parameters.get(j) + ", ");
+                    }
+                    outputStreamWriter.write("\n");
+                    parameters.clear();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void getCreaturesInfo(WebElement webElement) {
+    public void getCreaturesInfo(WebElement webElement, String fraction) {
         //Переход по ссылке фракции
         webElement.click();
 
+        //Сохраняем параметры всех существ фракции
         for (int number = 1; number <= 21; number++) {
-            WebElement creature = driver.findElement(By.xpath("(//div[@class='header1'])[" + number + "]"));
-
-            WebElement attack = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[1]//td[@class='cells'][1]"));
-            WebElement defense = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[2]//td[@class='cells'][1]"));
-            WebElement damage = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][1]"));
-            WebElement hitPoints = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][1]"));
-
-            WebElement speed = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[1]//td[@class='cells'][2]"));
-            WebElement initiative = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[2]//td[@class='cells'][2]"));
-            WebElement shots = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][2]"));
-            WebElement mana = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][2]"));
-
-            WebElement growthRate = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[1]//td[@class='cells'][3]"));
-            WebElement gold = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[2]//td[@class='cells'][3]"));
-            WebElement resource = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][3]"));
-            WebElement experience = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][3]"));
-
-            listOfCreatures.add(creature.getText());
-            listOfAttack.add(attack.getText());
-            listOfDefense.add(defense.getText());
-            listOfDamage.add(damage.getText());
-            listOfHitPoints.add(hitPoints.getText());
-            listOfSpeed.add(speed.getText());
-            listOfInitiative.add(initiative.getText());
-            listOfShots.add(shots.getText());
-            listOfMana.add(mana.getText());
-            listOfGrowthRate.add(growthRate.getText());
-            listOfGold.add(gold.getText());
-            listOfResource.add(resource.getText());
-            listOfExperience.add(experience.getText());
+            listOfCreatures.add(driver.findElement(By.xpath("(//div[@class='header1'])[" + number + "]")).getText());
+            listOfAttack.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[1]//td[@class='cells'][1]")).getText());
+            listOfDefense.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[2]//td[@class='cells'][1]")).getText());
+            listOfDamage.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][1]")).getText());
+            listOfHitPoints.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][1]")).getText());
+            listOfSpeed.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[1]//td[@class='cells'][2]")).getText());
+            listOfInitiative.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[2]//td[@class='cells'][2]")).getText());
+            listOfShots.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][2]")).getText());
+            listOfMana.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][2]")).getText());
+            listOfGrowthRate.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[1]//td[@class='cells'][3]")).getText());
+            listOfGold.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[2]//td[@class='cells'][3]")).getText());
+            listOfResource.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][3]")).getText());
+            listOfExperience.add(driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][3]")).getText());
         }
+        //Вывод параметров в консоль
+        System.out.println(fraction);
         System.out.println("Существо " + listOfCreatures);
         System.out.println("Атака " + listOfAttack);
         System.out.println("Защита " + listOfDefense);
