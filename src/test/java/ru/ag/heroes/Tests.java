@@ -7,6 +7,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,11 +80,11 @@ public class Tests {
     }
 
     public void getCreaturesInfo(WebElement webElement) {
-        List<String> creatures = new ArrayList<>();
+        List<String> listOfCreatures = new ArrayList<>();
         List<String> listOfAttack = new ArrayList<>();
         List<String> listOfDefense = new ArrayList<>();
         List<String> listOfDamage = new ArrayList<>();
-        List<String> ListOfhitPoints = new ArrayList<>();
+        List<String> listOfHitPoints = new ArrayList<>();
         List<String> listOfSpeed = new ArrayList<>();
         List<String> listOfInitiative = new ArrayList<>();
         List<String> listOfShots = new ArrayList<>();
@@ -114,11 +115,11 @@ public class Tests {
             WebElement resource = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][3]"));
             WebElement experience = driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][3]"));
 
-            creatures.add(creature.getText());
+            listOfCreatures.add(creature.getText());
             listOfAttack.add(attack.getText());
             listOfDefense.add(defense.getText());
             listOfDamage.add(damage.getText());
-            ListOfhitPoints.add(hitPoints.getText());
+            listOfHitPoints.add(hitPoints.getText());
             listOfSpeed.add(speed.getText());
             listOfInitiative.add(initiative.getText());
             listOfShots.add(shots.getText());
@@ -128,11 +129,11 @@ public class Tests {
             listOfResource.add(resource.getText());
             listOfExperience.add(experience.getText());
         }
-        System.out.println("Существо " + creatures);
+        System.out.println("Существо " + listOfCreatures);
         System.out.println("Атака " + listOfAttack);
         System.out.println("Защита " + listOfDefense);
         System.out.println("Урон " + listOfDamage);
-        System.out.println("Здоровье " + ListOfhitPoints);
+        System.out.println("Здоровье " + listOfHitPoints);
         System.out.println("Скорость " + listOfSpeed);
         System.out.println("Инициатива " + listOfInitiative);
         System.out.println("Выстрелы " + listOfShots);
@@ -141,5 +142,15 @@ public class Tests {
         System.out.println("Золото " + listOfGold);
         System.out.println("Ресурс " + listOfResource);
         System.out.println("Опыт " + listOfExperience);
+
+        //Сохранение информации о существах в файл
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream("Creatures.txt");
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            outputStreamWriter.write(listOfCreatures.toString());
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
