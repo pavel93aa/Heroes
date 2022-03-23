@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,21 +76,29 @@ public class Tests {
 
     @Test(description = "Получение информации о существах")
     public void getCreaturesInfoTest() {
+        List<String> listOfFractions = new ArrayList<>();
+        Collections.addAll(listOfFractions, "Academy", "Dungeon", "Haven", "Inferno", "Necropolis", "Sylvan", "Fortress", "Stronghold");
+
         //Переход по ссылке "Heroes V"
         driver.findElement(By.xpath("//a[text()='Heroes V']")).click();
 
         //Переход по ссылке "Существа"
         driver.findElement(By.xpath("//a[@href='creatures/index.html']")).click();
 
-        //Вызываем метод получения информации о существах для каждой фракции
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Academy']")));
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Dungeon']")));
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Haven']")));
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Inferno']")));
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Necropolis']")));
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Sylvan']")));
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Fortress']")));
-        getCreaturesInfo(driver.findElement(By.xpath("//a[text()='Stronghold']")));
+        for (int i = 0; i < 8; i++) {
+            //Вызываем метод получения информации о существах для каждой фракции
+            getCreaturesInfo(driver.findElement(By.xpath("//a[text()='" + listOfFractions.get(i) + "']")));
+            //Сохранение информации о существах в файл
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(listOfFractions.get(i) + "Creatures.txt");
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+                outputStreamWriter.write(listOfCreatures.toString());
+                outputStreamWriter.close();
+                listOfCreatures.clear();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void getCreaturesInfo(WebElement webElement) {
@@ -141,15 +150,5 @@ public class Tests {
         System.out.println("Золото " + listOfGold);
         System.out.println("Ресурс " + listOfResource);
         System.out.println("Опыт " + listOfExperience);
-
-        //Сохранение информации о существах в файл
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream("Creatures.txt");
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            outputStreamWriter.write(listOfCreatures.toString());
-            outputStreamWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
