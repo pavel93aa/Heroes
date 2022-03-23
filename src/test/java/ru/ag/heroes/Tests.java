@@ -16,6 +16,19 @@ import java.util.List;
  */
 public class Tests {
     private WebDriver driver;
+    private final List<String> listOfCreatures = new ArrayList<>();
+    private final List<String> listOfAttack = new ArrayList<>();
+    private final List<String> listOfDefense = new ArrayList<>();
+    private final List<String> listOfDamage = new ArrayList<>();
+    private final List<String> listOfHitPoints = new ArrayList<>();
+    private final List<String> listOfSpeed = new ArrayList<>();
+    private final List<String> listOfInitiative = new ArrayList<>();
+    private final List<String> listOfShots = new ArrayList<>();
+    private final List<String> listOfMana = new ArrayList<>();
+    private final List<String> listOfGrowthRate = new ArrayList<>();
+    private final List<String> listOfGold = new ArrayList<>();
+    private final List<String> listOfResource = new ArrayList<>();
+    private final List<String> listOfExperience = new ArrayList<>();
 
     @BeforeMethod
     public void setUp() {
@@ -80,20 +93,6 @@ public class Tests {
     }
 
     public void getCreaturesInfo(WebElement webElement) {
-        List<String> listOfCreatures = new ArrayList<>();
-        List<String> listOfAttack = new ArrayList<>();
-        List<String> listOfDefense = new ArrayList<>();
-        List<String> listOfDamage = new ArrayList<>();
-        List<String> listOfHitPoints = new ArrayList<>();
-        List<String> listOfSpeed = new ArrayList<>();
-        List<String> listOfInitiative = new ArrayList<>();
-        List<String> listOfShots = new ArrayList<>();
-        List<String> listOfMana = new ArrayList<>();
-        List<String> listOfGrowthRate = new ArrayList<>();
-        List<String> listOfGold = new ArrayList<>();
-        List<String> listOfResource = new ArrayList<>();
-        List<String> listOfExperience = new ArrayList<>();
-
         //Переход по ссылке фракции
         webElement.click();
 
