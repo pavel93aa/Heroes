@@ -115,6 +115,11 @@ public class Tests {
             mapOfValuesOfCreaturesParameters.put("resource", driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[3]//td[@class='cells'][3]")).getText());
             mapOfValuesOfCreaturesParameters.put("experience", driver.findElement(By.xpath("(//td[@class='cbg2'])[" + number + "]//tr[4]//td[@class='cells'][3]")).getText());
 
+            //Удаление символов "-"
+            for (String parameter : mapOfValuesOfCreaturesParameters.keySet())
+                if (mapOfValuesOfCreaturesParameters.get(parameter).equals("-"))
+                    mapOfValuesOfCreaturesParameters.put(parameter, "");
+
             mapOfValuesOfCreatures.put(driver.findElement(By.xpath("(//div[@class='header1'])[" + number + "]")).getText(), mapOfValuesOfCreaturesParameters);
         }
         return mapOfValuesOfCreatures;
